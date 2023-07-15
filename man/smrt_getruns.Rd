@@ -17,5 +17,6 @@ smrt_getruns(baseurl, user, pass)
 A tibble with run information
 }
 \description{
-Get run information from a PacBio SMRTLink server v12.0
+The API endpoint used is \verb{SMRTLink/1.0.0/smrt-link/runs}. This function uses \code{smrt_gettoken()} internally to obtain
+an access token.
 }
