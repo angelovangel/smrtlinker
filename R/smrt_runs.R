@@ -1,7 +1,7 @@
 
 #' Get run information from a PacBio SMRTLink server v12.0
 #'
-#' The API endpoint used is `SMRTLink/1.0.0/smrt-link/runs`. This function uses `smrt_gettoken()` internally to obtain
+#' The API endpoint used is `SMRTLink/1.0.0/smrt-link/runs`. This function uses `smrt_token()` internally to obtain
 #' an access token, meaning that a new token is obtained with each invocation.
 #'
 #' @param baseurl URL of the SMRTLink installation, e.g. https://servername:8243
@@ -16,9 +16,9 @@
 #' @export
 #'
 #'
-smrt_getruns <- function(baseurl, user, pass) {
+smrt_runs <- function(baseurl, user, pass) {
 
-  token <- smrt_gettoken(baseurl, user, pass) %>% .$access_token
+  token <- smrt_token(baseurl, user, pass) %>% .$access_token
 
   resp <-
     request(baseurl) %>%

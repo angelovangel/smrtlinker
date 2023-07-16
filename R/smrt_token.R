@@ -13,7 +13,7 @@
 #' @export
 #'
 
-smrt_gettoken <- function(baseurl, user, pass) {
+smrt_token <- function(baseurl, user, pass) {
   request(baseurl) %>%
     req_url_path_append('token') %>%
     req_user_agent('smrtlinker (https://github.com/angelovangel/smrtlinker)') %>%
