@@ -1,8 +1,8 @@
 # smrtlinker
-An R package for working with the Pacific Biosciences SMRTLink API.
+An R package for working with the [Pacific Biosciences](https://www.pacb.com/) SMRTLink API.
 
 ## Description
-This package is a wrapper for the PacBio SMRTLink API (v12.0). It includes functions for accessing several SMRTLink endpoints and aims to provide run/SMRTcell/analsis data in tidy format.
+This package is a wrapper for the PacBio SMRTLink API (v12.0). It includes functions for accessing several `SMRTLink` endpoints and aims to provide run/SMRTcell/analsis data in `tidy` format.
 The API documentation can be found [here](https://www.pacb.com/wp-content/uploads/SMRT_Link_Web_Services_API_Use_Cases_v12.0.pdf).
  
 ## Installation
@@ -12,9 +12,10 @@ devtools::install_github("angelovangel/smrtlinker")
 ```
 ## Usage
 The `smrtlinker` functions were designed to obtain all the information present at a given API endpoint. The base URL for a SMRTLink installation is something like:  `https://<servername>:8243`.   
-A good starting point is to get a tibble with all the runs:
+A good starting point is to get a table with all the runs:
 
 ```
+library(smrtlinker)
 runs <- smrt_runs(baseurl, user, pass)
 ```
 Use caution when providing user and password information in scripts as this may expose them. An easy solution is to put them in your `.Renviron` and access them with `Sys.getenv()`.
@@ -32,7 +33,7 @@ smrt_cells(baseurl, token, runid)
 map_df(runs$run_uniqueId, smrt_cells, baseurl = baseurl, token = token)
 ```
 
-It is also possible to obtain CCS analysis information for a given cell (`dataseuid` is present in the `smrt_cells()` output):
+It is also possible to obtain CCS analysis information for a given cell (`datasetuid` is present in the `smrt_cells()` output):
 ```
 smrt_ccs(baseurl, token, datasetuid)
 ```
