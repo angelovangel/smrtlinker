@@ -12,6 +12,7 @@ Imports:
     lubridate,
     purrr,
     dplyr,
+    tibble,
     stringr,
     jsonlite
 Encoding: UTF-8

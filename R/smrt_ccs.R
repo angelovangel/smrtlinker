@@ -47,8 +47,9 @@ smrt_ccs <- function(baseurl, token, datasetuid) {
     req_perform()
 
   json <- resp_body_string(reportfile) %>% jsonlite::fromJSON()
-  setNames(rbind.data.frame(json$attributes$value), json$attributes$id) %>%
+  purrr::set_names(rbind.data.frame(json$attributes$value), json$attributes$id) %>%
     tibble::as_tibble() %>%
     dplyr::select(-c('ccs2.median_accuracy')) %>%
-    dplyr::mutate_all(as.numeric)
+    dplyr::mutate_all(as.numeric) %>%
+    dplyr::mutate(datasetuid = datasetuid, ccs_uuid = ccs_uuid)
 }
