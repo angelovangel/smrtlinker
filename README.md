@@ -30,7 +30,7 @@ token <- smrt_token(baseurl, user, pass) %>% .$access_token
 smrt_cells(baseurl, token, runid)
 
 # or for all runs
-map_df(runs$run_uniqueId, smrt_cells, baseurl = baseurl, token = token)
+purrr::map_df(runs$run_uniqueId, smrt_cells, baseurl = baseurl, token = token)
 ```
 
 It is also possible to obtain CCS analysis information for a given cell (`datasetuid` is present in the `smrt_cells()` output):

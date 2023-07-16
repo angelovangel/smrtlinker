@@ -36,6 +36,7 @@ smrt_ccs <- function(baseurl, token, datasetuid) {
   ccs_uuid <- resp_list[[ccs_file_index]]$dataStoreFile$uuid
 
 
+
   reportfile <-
     request(baseurl) %>%
     req_url_path_append(paste0('SMRTLink/1.0.0/smrt-link/datastore-files/', ccs_uuid, '/download')) %>%
