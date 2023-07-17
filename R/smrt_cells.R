@@ -30,8 +30,9 @@ smrt_cells <- function(baseurl, token, runid) {
   json <- resp_body_json(resp)
 
   tibble::tibble(
-    run_uniqueId = map_chr(json, 'runId', .default = NA),
-    cell_uniqueId = map_chr(json, 'uniqueId', .default = NA),
+    run_id = map_chr(json, 'runId', .default = NA),
+    instrument_name = map_chr(json, 'instrumentName', .default = NA),
+    cell_id = map_chr(json, 'uniqueId', .default = NA),
     cell_name = map_chr(json, 'name', .default = NA),
     well = map_chr(json, 'well', .default = NA),
     status = map_chr(json, 'status', .default = NA),

@@ -36,6 +36,7 @@ smrt_runs <- function(baseurl, user, pass) {
     run_name = map_chr(json, 'name', .default = NA),
     run_summary = map_chr(json, 'summary', .default = NA),
     status = map_chr(json, 'status', .default = NA),
+    instrument_name = map_chr(json, 'instrumentName', .default = NA),
     instrument = map_chr(json, 'instrumentType', .default = NA),
     chip = map_chr(json, 'chipType', .default = NA),
     runID = map_chr(json, 'context', .default = NA),

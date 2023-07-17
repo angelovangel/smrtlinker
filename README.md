@@ -30,12 +30,19 @@ token <- smrt_token(baseurl, user, pass) %>% .$access_token
 smrt_cells(baseurl, token, runid)
 
 # or for all runs
-purrr::map_df(runs$run_uniqueId, smrt_cells, baseurl = baseurl, token = token)
+library(purrr)
+
+map(runs$run_uniqueId, smrt_cells, baseurl = baseurl, token = token) %>%
+  list_rbind()
+
+# the smrt_cells call in map_df can be wrapped in purrr::possibly() if some run_uniqueId are invalid
 ```
 
-It is also possible to obtain CCS analysis information for a given cell (`datasetuid` is present in the `smrt_cells()` output):
+It is also possible to obtain subreads and CCS information for a given collection:
+
 ```
-smrt_ccs(baseurl, token, datasetuid)
+smtrt_subreads(baseurl, token, uid)   # uid is the collection UUID
+smrt_ccsreads(baseurl, token, ccsid)  # ccsid is present in the `smrt_cells()` output
 ```
 
 ## Disclaimer
