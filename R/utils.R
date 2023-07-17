@@ -5,9 +5,9 @@
 
 get_subreadsdata <- function(cell_id, ccs_id, instrument_name, ...) {
   if (instrument_name == '64468e') {
-    smrt_subreads(baseurl = baseurl, token = token, celluid = ccs_id)
+    smrt_subreads(baseurl = baseurl, token = token, uid = ccs_id)
   } else {
-    smrt_subreads(baseurl = baseurl, token = token, celluid = cell_uniqueId)
+    smrt_subreads(baseurl = baseurl, token = token, uid = cell_id)
   }
 }
 

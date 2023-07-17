@@ -51,5 +51,5 @@ smrt_subreads <- function(baseurl, token, uid) {
     tibble::as_tibble() %>%
     #dplyr::select(-c('ccs2.median_accuracy')) %>%
     dplyr::mutate_all(as.numeric) %>%
-    dplyr::mutate(cell_uniqueId = celluid, dataset_uniqueId = dataset_uuid)
+    dplyr::mutate(dataset_id = dataset_uuid)
 }

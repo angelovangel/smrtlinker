@@ -2,7 +2,7 @@
 An R package for working with the [Pacific Biosciences](https://www.pacb.com/) SMRTLink API.
 
 ## Description
-This package is a wrapper for the PacBio SMRTLink API (v12.0). It includes functions for accessing several `SMRTLink` endpoints and aims to provide run/SMRTcell/analsis data in `tidy` format.
+This package is a wrapper for the PacBio SMRTLink API (v12.0). It includes functions for accessing several `SMRTLink` endpoints and aims to provide run/SMRTcell/analysis data in `tidy` format.
 The API documentation can be found [here](https://www.pacb.com/wp-content/uploads/SMRT_Link_Web_Services_API_Use_Cases_v12.0.pdf).
  
 ## Installation
@@ -32,7 +32,7 @@ smrt_cells(baseurl, token, runid)
 # or for all runs
 library(purrr)
 
-map(runs$run_uniqueId, smrt_cells, baseurl = baseurl, token = token) %>%
+map(runs$run_id, smrt_cells, baseurl = baseurl, token = token) %>%
   list_rbind()
 
 ```
