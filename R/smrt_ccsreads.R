@@ -9,7 +9,7 @@
 #'
 #' @param baseurl URL of the SMRTLink installation, e.g. https://servername:8243
 #' @param token A token obtained with `smrt_token()`
-#' @param ccsid ccs dataset UUID
+#' @param datasetuid ccs dataset UUID
 #'
 #' @import httr2
 #' @importFrom stringr str_which
@@ -18,11 +18,11 @@
 #' @export
 #'
 #'
-smrt_ccsreads <- function(baseurl, token, ccsid) {
+smrt_ccsreads <- function(baseurl, token, datasetuid) {
 
   resp_list <-
     request(baseurl) %>%
-    req_url_path_append(paste0('SMRTLink/1.0.0/smrt-link/datasets/ccsreads', '/', ccsid, '/reports')) %>%
+    req_url_path_append(paste0('SMRTLink/1.0.0/smrt-link/datasets/ccsreads', '/', datasetuid, '/reports')) %>%
     req_user_agent('smrtlinker (https://github.com/angelovangel/smrtlinker)') %>%
     req_options(ssl_verifypeer = 0) %>%
     req_headers(

@@ -14,3 +14,23 @@ get_subreadsdata <- function(cell_id, ccs_id, instrument_name, ...) {
 # use in pmap
 # pmap(cells_df, get_subreadsdata, baseurl = baseurl, token = token)
 
+get_all_datasets <- function(type = 'subreads', token) {
+  resp <-
+    request(baseurl) %>%
+    req_url_path_append(paste0('SMRTLink/1.0.0/smrt-link/datasets/', type)) %>%
+    req_user_agent('smrtlinker (https://github.com/angelovangel/smrtlinker)') %>%
+    req_options(ssl_verifypeer = 0) %>%
+    req_headers(
+      Authorization = paste0('Bearer ', token)
+    ) %>%
+    req_perform()
+
+  j <- resp_body_json(resp)
+
+  purrr::map_df(j, dplyr::bind_rows) %>%
+    dplyr::mutate(updatedAt = lubridate::as_datetime(updatedAt),
+                  createdAt = lubridate::as_datetime(createdAt),
+                  importedAt = lubridate::as_datetime(importedAt)
+                  )
+}
+
