@@ -27,12 +27,12 @@ With a Run ID, it is now easy to obtain cells (collections) information:
 token <- smrt_token(baseurl, user, pass) %>% .$access_token
 
 # get cells info for a given run
-smrt_cells(baseurl, token, runid)
+smrt_collections(baseurl, token, runid)
 
-# or for all runs
+# or get cells for all runs
 library(purrr)
 
-map(runs$run_id, smrt_cells, baseurl = baseurl, token = token) %>%
+map(runs$run_id, smrt_collections, baseurl = baseurl, token = token) %>%
   list_rbind()
 
 ```
@@ -41,7 +41,7 @@ It is also possible to obtain subreads and CCS information for a given collectio
 
 ```
 smrt_subreads(baseurl, token, uid)   # uid is the collection UUID
-smrt_ccsreads(baseurl, token, ccsid)  # ccsid is present in the `smrt_cells()` output
+smrt_ccsreads(baseurl, token, ccsid)  # ccsid is present in the `smrt_collections()` output
 ```
 
 ## Disclaimer

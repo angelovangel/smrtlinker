@@ -4,14 +4,14 @@
 \alias{smrt_ccsreads}
 \title{Get CCS data from a particular report}
 \usage{
-smrt_ccsreads(baseurl, token, ccsid)
+smrt_ccsreads(baseurl, token, datasetuid)
 }
 \arguments{
 \item{baseurl}{URL of the SMRTLink installation, e.g. https://servername:8243}
 
 \item{token}{A token obtained with \code{smrt_token()}}
 
-\item{ccsid}{ccs dataset UUID}
+\item{datasetuid}{ccs dataset UUID}
 }
 \value{
 A tibble with report information

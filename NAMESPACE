@@ -2,6 +2,7 @@
 
 export(smrt_ccsreads)
 export(smrt_cells)
+export(smrt_collections)
 export(smrt_runs)
 export(smrt_subreads)
 export(smrt_token)

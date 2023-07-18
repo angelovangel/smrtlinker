@@ -31,20 +31,28 @@ smrt_runs <- function(baseurl, user, pass) {
     req_perform()
   json <- resp_body_json(resp)
 
-  tibble::tibble(
-    run_uniqueId = map_chr(json, 'uniqueId', .default = NA),
-    run_name = map_chr(json, 'name', .default = NA),
-    run_summary = map_chr(json, 'summary', .default = NA),
-    status = map_chr(json, 'status', .default = NA),
-    instrument_name = map_chr(json, 'instrumentName', .default = NA),
-    instrument = map_chr(json, 'instrumentType', .default = NA),
-    chip = map_chr(json, 'chipType', .default = NA),
-    runID = map_chr(json, 'context', .default = NA),
-    total_cells = map_int(json, 'totalCells', .default = NA),
-    num_cells = map_int(json, 'numCellsCompleted', .default = NA),
-    started_at = lubridate::as_datetime(map_chr(json, 'startedAt', .default = NA)),
-    completed_at = lubridate::as_datetime(map_chr(json, 'completedAt', .default = NA)),
-    created_by = map_chr(json, 'createdBy', .default = NA),
-    ccs_mode = map_chr(json, 'ccsExecutionMode', .default = NA)
-  )
+  purrr::map_df(json, dplyr::bind_rows) %>%
+    dplyr::mutate(
+      completedAt = lubridate::as_datetime(completedAt),
+      createdAt = lubridate::as_datetime(createdAt),
+      startedAt = lubridate::as_datetime(startedAt),
+      transfersCompletedAt = lubridate::as_datetime(transfersCompletedAt)
+    )
+
+  # tibble::tibble(
+  #   run_uniqueId = map_chr(json, 'uniqueId', .default = NA),
+  #   run_name = map_chr(json, 'name', .default = NA),
+  #   run_summary = map_chr(json, 'summary', .default = NA),
+  #   status = map_chr(json, 'status', .default = NA),
+  #   instrument_name = map_chr(json, 'instrumentName', .default = NA),
+  #   instrument = map_chr(json, 'instrumentType', .default = NA),
+  #   chip = map_chr(json, 'chipType', .default = NA),
+  #   runID = map_chr(json, 'context', .default = NA),
+  #   total_cells = map_int(json, 'totalCells', .default = NA),
+  #   num_cells = map_int(json, 'numCellsCompleted', .default = NA),
+  #   started_at = lubridate::as_datetime(map_chr(json, 'startedAt', .default = NA)),
+  #   completed_at = lubridate::as_datetime(map_chr(json, 'completedAt', .default = NA)),
+  #   created_by = map_chr(json, 'createdBy', .default = NA),
+  #   ccs_mode = map_chr(json, 'ccsExecutionMode', .default = NA)
+  # )
 }
