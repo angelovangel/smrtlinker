@@ -32,7 +32,7 @@ smrt_collections(baseurl, token, runid)
 # or get cells for all runs
 library(purrr)
 
-map(runs$run_id, smrt_collections, baseurl = baseurl, token = token) %>%
+map(runs$uniqueId, smrt_collections, baseurl = baseurl, token = token) %>%
   list_rbind()
 
 ```

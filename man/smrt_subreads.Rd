@@ -11,7 +11,7 @@ smrt_subreads(baseurl, token, uid)
 
 \item{token}{A token obtained with \code{smrt_token()}}
 
-\item{celluid}{cell unique id}
+\item{uid}{cell unique id}
 }
 \value{
 A tibble with report information

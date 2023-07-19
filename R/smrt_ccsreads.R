@@ -32,7 +32,7 @@ smrt_ccsreads <- function(baseurl, token, datasetuid) {
     resp_body_json()
 
   #get the report file uid to download
-  ccs_file_index <- purrr::map_chr(resp_list, 'reportTypeId') %>% str_which('report_ccs2')
+  ccs_file_index <- purrr::map_chr(resp_list, 'reportTypeId') %>% str_which('report_ccs$|report_ccs2$')
   ccs_uuid <- resp_list[[ccs_file_index]]$dataStoreFile$uuid
 
 
@@ -50,7 +50,7 @@ smrt_ccsreads <- function(baseurl, token, datasetuid) {
   json <- resp_body_string(reportfile) %>% jsonlite::fromJSON()
   purrr::set_names(rbind.data.frame(json$attributes$value), json$attributes$id) %>%
     tibble::as_tibble() %>%
-    dplyr::select(-c('ccs2.median_accuracy')) %>%
+    #dplyr::select(-c('ccs2.median_accuracy')) %>%
     dplyr::mutate_all(as.numeric) %>%
     dplyr::mutate(datasetuid = datasetuid, ccs_uuid = ccs_uuid)
 }

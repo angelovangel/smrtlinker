@@ -4,14 +4,12 @@
 \alias{smrt_runs}
 \title{Get run information from a PacBio SMRTLink server v12.0}
 \usage{
-smrt_runs(baseurl, user, pass)
+smrt_runs(baseurl, token)
 }
 \arguments{
 \item{baseurl}{URL of the SMRTLink installation, e.g. https://servername:8243}
 
-\item{user}{Username}
-
-\item{pass}{Password}
+\item{token}{token}
 }
 \value{
 A tibble with run information

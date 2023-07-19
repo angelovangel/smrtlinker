@@ -5,8 +5,7 @@
 #' an access token, meaning that a new token is obtained with each invocation.
 #'
 #' @param baseurl URL of the SMRTLink installation, e.g. https://servername:8243
-#' @param user Username
-#' @param pass Password
+#' @param token token
 #'
 #' @import httr2
 #' @importFrom purrr map_chr
@@ -16,9 +15,9 @@
 #' @export
 #'
 #'
-smrt_runs <- function(baseurl, user, pass) {
+smrt_runs <- function(baseurl, token) {
 
-  token <- smrt_token(baseurl, user, pass) %>% .$access_token
+  #token <- smrt_token(baseurl, user, pass) %>% .$access_token
 
   resp <-
     request(baseurl) %>%

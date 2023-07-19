@@ -8,7 +8,7 @@
 #'
 #' @param baseurl URL of the SMRTLink installation, e.g. https://servername:8243
 #' @param token A token obtained with `smrt_token()`
-#' @param celluid cell unique id
+#' @param uid cell unique id
 #'
 #' @import httr2
 #' @importFrom stringr str_which
@@ -31,7 +31,7 @@ smrt_subreads <- function(baseurl, token, uid) {
     resp_body_json()
 
   #get the report file uid to download
-  dataset_file_index <- purrr::map_chr(resp_list, 'reportTypeId') %>% str_which('report_raw_data')
+  dataset_file_index <- purrr::map_chr(resp_list, 'reportTypeId') %>% str_which('report_raw_data$') %>% dplyr::first()
   dataset_uuid <- resp_list[[dataset_file_index]]$dataStoreFile$uuid
 
 

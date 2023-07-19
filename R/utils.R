@@ -3,18 +3,18 @@
 # For Sequel 2e (64468e), subread dataset UID == ccs UID
 
 
-get_subreadsdata <- function(cell_id, ccs_id, instrument_name, ...) {
+get_subreadsdata <- function(uniqueId, ccsId, instrument_name, ...) {
   if (instrument_name == '64468e') {
-    smrt_subreads(baseurl = baseurl, token = token, uid = ccs_id)
+    smrt_subreads(baseurl = baseurl, token = token, uid = ccsId)
   } else {
-    smrt_subreads(baseurl = baseurl, token = token, uid = cell_id)
+    smrt_subreads(baseurl = baseurl, token = token, uid = uniqueId)
   }
 }
 
 # use in pmap
 # pmap(cells_df, get_subreadsdata, baseurl = baseurl, token = token)
 
-get_all_datasets <- function(type = 'subreads', token) {
+get_all_datasets <- function(baseurl, token, type = 'subreads') {
   resp <-
     request(baseurl) %>%
     req_url_path_append(paste0('SMRTLink/1.0.0/smrt-link/datasets/', type)) %>%
@@ -28,9 +28,45 @@ get_all_datasets <- function(type = 'subreads', token) {
   j <- resp_body_json(resp)
 
   purrr::map_df(j, dplyr::bind_rows) %>%
-    dplyr::mutate(updatedAt = lubridate::as_datetime(updatedAt),
-                  createdAt = lubridate::as_datetime(createdAt),
-                  importedAt = lubridate::as_datetime(importedAt)
-                  )
-}
+    # this is robust and doesn't throw errors of some of the cols are missing
+    dplyr::mutate_at(
+      dplyr::vars(dplyr::any_of(
+        c('createdAt', 'importedAt', 'updatedAt')
+      )), lubridate::as_datetime
+    )
+  }
+
+  prep_dump <- function(baseurl, user, pass) {
+
+    token <- smrt_token(baseurl, user = user, pass = pass) %>% .$access_token
+
+    runs <- smrt_runs(baseurl = baseurl, token = token) %>%
+       dplyr::select(
+         run_name = name,
+         run_context = context,
+         run_startedAt = startedAt,
+         run_completedAt = completedAt,
+         run_status = status,
+         instrumentType = instrumentType,
+         numCellsCompleted = numCellsCompleted,
+         totalCells = totalCells,
+         createdBy = createdBy,
+         run_uniqueId = uniqueId
+         )
+    cols <- purrr::map(runs$run_uniqueId, smrt_collections, baseurl = baseurl, token = token) %>%
+      purrr::list_rbind() %>%
+      dplyr::select(
+        coll_name = name,
+        coll_context = context,
+        coll_startedAt = startedAt,
+        coll_completedAt = completedAt,
+        coll_status = status,
+        runId = runId,
+        ccsId = ccsId,
+        coll_uniqueId = uniqueId
+      )
+
+    dplyr::left_join(runs, cols, by = c('run_uniqueId' = 'runId'))
+
+  }
 

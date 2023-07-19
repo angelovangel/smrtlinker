@@ -24,12 +24,13 @@ smrt_collections <- function(baseurl, token, runid) {
       Authorization = paste0('Bearer ', token)
     ) %>%
     req_perform()
-  json <- resp_body_json(resp)
+  mylist <- resp_body_json(resp)
 
-  purrr::map_df(json, dplyr::bind_rows) %>%
-    dplyr::mutate(
-      completedAt = lubridate::as_datetime(startedAt),
-      importedAt = lubridate::as_datetime(importedAt),
-      startedAt = lubridate::as_datetime(startedAt)
+  purrr::map_df(mylist, dplyr::bind_rows) %>%
+    # this is robust and doesn't throw errors of some of the cols are missing
+    dplyr::mutate_at(
+      dplyr::vars(dplyr::any_of(
+        c('completedAt', 'importedAt', 'startedAt')
+      )), lubridate::as_datetime
     )
 }
