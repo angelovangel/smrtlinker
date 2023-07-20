@@ -66,7 +66,38 @@ get_all_datasets <- function(baseurl, token, type = 'subreads') {
         coll_uniqueId = uniqueId
       )
 
-    dplyr::left_join(runs, cols, by = c('run_uniqueId' = 'runId'))
+    df1 <- dplyr::left_join(runs, cols, by = c('run_uniqueId' = 'runId'))
 
+    # get subreads --> for Sequel2 call smrt_subreads(coll_uid), for Sequel2e call smrt_subreads(ccs_uid)
+    subrds_seq2  <- map(df1 %>%
+                          filter(instrumentType == 'Sequel2' & coll_status == 'Complete') %>%
+                          .$coll_uniqueId, possibly(smrt_subreads), baseurl = baseurl, token = token
+                        ) %>%
+      list_rbind()
+
+    subrds_seq2e <- map(df1 %>%
+                          filter(instrumentType == 'Sequel2e' & coll_status == 'Complete') %>%
+                          .$ccsId, possibly(smrt_subreads), baseurl = baseurl, token = token
+    ) %>%
+      list_rbind()
+
+    # sbrds <- get_all_datasets(baseurl, token, type = 'subreads') %>%
+    #   dplyr::select(sbrds_metadataContextId = metadataContextId,
+    #                 sbrds_totalLength = totalLength,
+    #                 sbrds_numRecords = numRecords,
+    #                 sbrds_parentUuid = parentUuid) %>%
+    #   # filter out demuxed datasets
+    #   dplyr::filter(is.na(sbrds_parentUuid))
+    #
+    # ccsrds <- get_all_datasets(baseurl, token, type = 'ccsreads') %>%
+    #   dplyr::select(ccs_metadataContextId = metadataContextId,
+    #                 ccs_totalLength = totalLength,
+    #                 ccs_numRecords = numRecords,
+    #                 ccs_parentUuid = parentUuid) %>%
+    #   # filter out demuxed datasets
+    #   dplyr::filter(is.na(ccs_parentUuid))
+
+    df1 %>%
+      dplyr::left_join(sbrds, by = c('coll_context' = 'sbrds_metadataContextId'))
   }
 
