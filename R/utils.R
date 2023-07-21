@@ -66,24 +66,27 @@ get_all_datasets <- function(baseurl, token, type = 'subreads') {
         coll_uniqueId = uniqueId
       )
 
-    df1 <- dplyr::left_join(runs, cols, by = c('run_uniqueId' = 'runId'))
+    df1 <- dplyr::left_join(runs, cols, by = c('run_uniqueId' = 'runId')) %>%
+      # use this to make one call to smrt_subreads and join later
+      dplyr::mutate(join_key = dplyr::if_else(instrumentType == 'Sequel2e', ccsId, coll_uniqueId))
 
     # get subreads --> for Sequel2 call smrt_subreads(coll_uid), for Sequel2e call smrt_subreads(ccs_uid)
-    subrds_seq2  <- map(df1 %>%
-                          filter(instrumentType == 'Sequel2' | instrumentType == 'Sequel' & coll_status == 'Complete') %>%
-                          .$coll_uniqueId, possibly(smrt_subreads), baseurl = baseurl, token = token
-                        ) %>% list_rbind()
-
-    subrds_seq2e <- map(df1 %>%
-                          filter(instrumentType == 'Sequel2e' & coll_status == 'Complete') %>%
-                          .$ccsId, possibly(smrt_subreads), baseurl = baseurl, token = token
-                        ) %>% list_rbind()
+    subrds  <- purrr::map(df1 %>%
+                          dplyr::filter(coll_status == 'Complete') %>%
+                          .$join_key, purrr::possibly(smrt_subreads), baseurl = baseurl, token = token
+                        ) %>% purrr::list_rbind()
 
     # all machines use ccs_uid
-    ccsrds <- map(df1 %>%
-                    filter(coll_status == 'Complete') %>%
-                    .$ccsId, possibly(smrt_ccsreads), baseurl = baseurl, token = token
-                  ) %>% list_rbind()
+    ccsrds <- purrr::map(df1 %>%
+                    dplyr::filter(coll_status == 'Complete') %>%
+                    .$ccsId, purrr::possibly(smrt_ccsreads), baseurl = baseurl, token = token
+                  ) %>% purrr::list_rbind()
+
+    # join all
+    df1 %>%
+      dplyr::left_join(subrds, by = c('join_key' = 'call_uid')) %>%
+      dplyr::left_join(ccsrds, by = c('ccsId' = 'call_uid'))
+
 
     # sbrds <- get_all_datasets(baseurl, token, type = 'subreads') %>%
     #   dplyr::select(sbrds_metadataContextId = metadataContextId,
