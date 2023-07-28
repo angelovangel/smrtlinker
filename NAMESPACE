@@ -3,6 +3,7 @@
 export(smrt_ccsreads)
 export(smrt_collections)
 export(smrt_runs)
+export(smrt_state)
 export(smrt_subreads)
 export(smrt_token)
 import(httr2)
