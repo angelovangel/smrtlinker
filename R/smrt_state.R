@@ -24,13 +24,14 @@ smrt_state <- function(baseurl, token) {
     req_perform()
 
   mylist <- resp_body_json(resp)
-  state <- map(mylist, 'state')
-  runData <- map(state, 'runData')
+  state <- purrr::map(mylist, 'state')
+  runData <- purrr::map(state, 'runData')
 
   tibble::tibble(
     serial = map_chr(mylist, 'serial'),
     instrumentName = map_chr(state, 'instrumentName'),
     status = map_chr(state, 'state'),
+    numcells = map_int(1:length(runData), function(x) runData[[x]]$collections %>% length()),
     updatedAt = map_chr(mylist, 'updatedAt') %>% lubridate::as_datetime(tz = Sys.timezone()),
     timestamp = map_chr(runData, 'timestamp') %>% lubridate::as_datetime(tz = Sys.timezone()),
     startedAt = map_chr(runData, 'startedAt') %>% lubridate::as_datetime(tz = Sys.timezone()),
