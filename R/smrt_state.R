@@ -36,6 +36,7 @@ smrt_state <- function(baseurl, token) {
     timestamp = map_chr(runData, 'timestamp') %>% lubridate::as_datetime(tz = Sys.timezone()),
     startedAt = map_chr(runData, 'startedAt') %>% lubridate::as_datetime(tz = Sys.timezone()),
     secondsRemaining = map_int(runData, 'estimatedSecondsRemaining'),
-    projectedEnd = timestamp + secondsRemaining
+    completedAt = map_chr(runData, 'completedAt') %>% lubridate::as_datetime(tz = Sys.timezone()),
+    projectedEnd = dplyr::if_else(status == 'Running', timestamp + secondsRemaining, NA)
     )
 }
