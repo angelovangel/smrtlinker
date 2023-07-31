@@ -32,6 +32,10 @@ smrt_state <- function(baseurl, token) {
     instrumentName = map_chr(state, 'instrumentName'),
     status = map_chr(state, 'state'),
     numcells = map_int(1:length(runData), function(x) runData[[x]]$collections %>% length()),
+    cells_status = map_chr(
+      1:length(runData), function(x) map_chr(runData[[x]]$collections, 'state') %>%
+        stringr::str_flatten(collapse = " | ", na.rm = T)
+      ),
     updatedAt = map_chr(mylist, 'updatedAt') %>% lubridate::as_datetime(tz = Sys.timezone()),
     timestamp = map_chr(runData, 'timestamp') %>% lubridate::as_datetime(tz = Sys.timezone()),
     startedAt = map_chr(runData, 'startedAt') %>% lubridate::as_datetime(tz = Sys.timezone()),
